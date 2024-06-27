@@ -143,6 +143,9 @@ be set to DOCN.
 <entry id="co2_cycle" valid_values="0,1" value="0">
 Turn on CO2 cycle in biogeochemistry model: 0 => no, 1 => yes.
 </entry>
+<entry id="co2e" valid_values="0,1" value="0">
+With this option, the chemistry CO2 constituent uses surface flux as the lower boundary condition.
+</entry>
 <entry id="pergro" valid_values="0,1" value="0">
 Modifications that allow perturbation growth testing: 0=off, 1=on.
 </entry>

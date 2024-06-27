@@ -13,7 +13,7 @@
     <desc atm="CAM40[%PORT][%RCO2][%SCAM][%SDYN][%TMOZ][%WX][%WXIE][%WXIED][%WCCM][%WCMD][%GEOSCHEM]"                                                         >CAM cam4 physics:</desc>
     <desc atm="CAM30"                                                                                                                              >CAM cam3 physics:</desc>
     <desc atm="CAM[%ADIAB][%DABIP04][%TJ16][%GRAYRAD][%HS94][%KESSLER][%RCO2][%SPCAMS][%SPCAMCLBS][%SPCAMM][%SPCAMCLBM]"                                     >CAM simplified and non-versioned physics :</desc>
-    <desc atm="CAM%DEV[%LT][%MT][%CCTS1][%GHGMAM4]"                                                                                                 >CAM7 development physics:</desc>
+    <desc atm="CAM%DEV[%LT][%MT][%CCTS1][%GHGMAM4][%CO2E]"                                                                                                 >CAM7 development physics:</desc>
 
   <!--
     ===============
@@ -44,6 +44,7 @@
     <desc option="CVBSX"        >CAM-Chem troposphere/stratosphere chem with extended volatility basis set SOA scheme and modal aersols :</desc>
     <desc option="LT"           >CAM low top model </desc>
     <desc option="GHGMAM4"      >Prognostic GHG chemistry mechanism for CAM7:</desc>
+    <desc option="CO2E"         >Chemistry CO2 constituent uses surface flux as the lower boundary condition:</desc>
     <desc option="MAM7"         >Modal Aerosol Model composed of 7 modes: </desc>
     <desc option="MT"           >CAM mid top model </desc>
     <desc option="RCO2"         >CAM CO2 ramp: </desc>
@@ -153,6 +154,7 @@
       <value compset="_CAM40%TMOZ">-chem trop_mozart</value>
 
       <value compset="_CAM.*_BGC%B">-co2_cycle</value>
+      <value compset="_CAM.*(%CO2E)">-co2e</value>
 
       <!-- Match against "%WC" to set defaults for all WACCM cases. -->
       <!-- Later settings of "-chem" take precedence over earlier ones. -->

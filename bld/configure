@@ -74,6 +74,7 @@ OPTIONS
                         Current option is: clubb_do_adv (Advect CLUBB moments)
      -co2_cycle         This option modifies the CAM configuration by
                         increasing the number of advected constituents by 4.
+     -co2e              With this option, the chemistry CO2 constituent uses surface flux as the lower boundary condition.
      -cosp              Enable the COSP simulator.
      -cppdefs <string>  A string of user specified CPP defines.  Appended to
                         Makefile defaults.  E.g. -cppdefs '-DVAR1 -DVAR2'
@@ -247,6 +248,7 @@ GetOptions(
     "clubb_sgs!"                => \$opts{'clubb_sgs'},
     "clubb_opts=s"              => \$opts{'clubb_opts'},
     "co2_cycle"                 => \$opts{'co2_cycle'},
+    "co2e"                      => \$opts{'co2e'},
     "cosp"                      => \$opts{'cosp'},
     "cosp_libdir=s"             => \$opts{'cosp_libdir'},
     "cppdefs=s"                 => \$opts{'cppdefs'},
@@ -768,6 +770,15 @@ if (defined $opts{'co2_cycle'}) {
 my $co2_cycle = $cfg_ref->get('co2_cycle');
 
 if ($co2_cycle and $print>=2) { print "co2_cycle option: ON$eol"; }
+
+#-----------------------------------------------------------------------------------------------
+# CO2 emissions option
+if (defined $opts{'co2e'}) {
+    $cfg_ref->set('co2e', $opts{'co2e'});
+}
+my $co2e = $cfg_ref->get('co2e');
+
+if ($co2e and $print>=2) { print "co2e option: ON$eol"; }
 
 #-----------------------------------------------------------------------------------------------
 # Superparameterization mode (SPCAM)

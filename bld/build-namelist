@@ -1714,7 +1714,8 @@ if ($chem =~ /waccm_sc/) {
 }
 if ($chem =~ /ghg_mam4/) {
     add_default($nl, 'h2orates');
-    my $flbc_list = "'CH4','N2O','CO2','CFC11','CFC12'";
+    my $flbc_list = "'CH4','N2O','CFC11','CFC12'";
+    if (!$cfg->get('co2e')) { $flbc_list = $flbc_list.",'CO2'"; }
     add_default($nl, 'flbc_list', 'val'=>$flbc_list);
     unless (defined $nl->get_value('flbc_type')) {
         add_default($nl, 'flbc_type',  'val'=>'CYCLICAL');
@@ -2923,9 +2924,13 @@ if (defined  $lbc_file) {
     # Otherwise make sure its set.
     add_default($nl, 'scenario_ghg',  'val'=>'CHEM_LBC_FILE');
 
+    my $co2e = $cfg->get('co2e');
+
     # If any individual GHG values are set then remove them and issue info message
     # that they will be ignored.
-    foreach my $ghg_vmr ('co2vmr','ch4vmr','n2ovmr','f11vmr','f12vmr') {
+    my @vmr_list = ('ch4vmr','n2ovmr','f11vmr','f12vmr');
+    if (!$co2e) { @vmr_list = ('co2vmr',@vmr_list); }
+    foreach my $ghg_vmr (@vmr_list) {
         my $val = $nl->get_value($ghg_vmr);
         if (defined $val) {
             print "$ProgName - INFO: Chem flbc_file in use. $ghg_vmr = $val removed from namelist.\n";
@@ -2936,20 +2941,34 @@ if (defined  $lbc_file) {
         }
     }
 
-    # Make sure the flbc_list specifies all the GHGs needed for radiation.
+    # Make sure the flbc_list specifies all the GHGs needed for radiation
+    # and doesn't include 'CO2' if co2e is specified.
     my $flbc_list = $nl->get_value('flbc_list');
     if (defined $flbc_list) {
         # If flbc_list has already been defined, check that it contains all
         # the GHGs needed by the radiation code.
-        foreach my $ghg ('CO2','CH4','N2O','CFC11','CFC12') {
+	my @ghg_list = ('CH4','N2O','CFC11','CFC12');
+	if ($co2e) {
+            if ($flbc_list =~ /'CO2'/) {
+                die "$ProgName - ERROR: CO2 should not be present in flbc_list if co2e is specified\n";
+            }
+	} else {
+            @ghg_list = ('CO2',@ghg_list);
+        }
+        foreach my $ghg (@ghg_list) {
             if ($flbc_list !~ /$ghg/) {
                 die "$ProgName - ERROR: $ghg is missing from flbc_list \n";
             }
         }
     }
     else {
-        my $val = "'CO2','CH4','N2O','CFC11','CFC12'";
-        add_default($nl, 'flbc_list', 'val'=>$val);
+        if ($co2e) {
+            my $val = "'CH4','N2O','CFC11','CFC12'";
+            add_default($nl, 'flbc_list', 'val'=>$val);
+        } else {
+            my $val = "'CO2','CH4','N2O','CFC11','CFC12'";
+            add_default($nl, 'flbc_list', 'val'=>$val);
+        }
     }
 
 }
